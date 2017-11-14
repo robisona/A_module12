@@ -18,7 +18,7 @@
 
 
 #Set working directory:
-setwd("C:\\Users\\Drew\\Documents\\UNH\\Courses\\NR 995 - R\\Modules\\12")
+setwd("C:/Users/Connor/Documents/word_files/graduate_courses/r/module_12/assignment")
 
 
 ###############################################################################################################
@@ -29,7 +29,7 @@ setwd("C:\\Users\\Drew\\Documents\\UNH\\Courses\\NR 995 - R\\Modules\\12")
 library(raster)
 
 # Read in data using the raster function
-LULC <- raster("./assignment/lulc_05.tif")
+LULC <- raster("lulc_05.tif")
 
 # Examine CRS
 LULC@crs
@@ -40,25 +40,18 @@ LULC@crs
 # X extent = 1739505 to 2286435
 # Y extent = 2193885 to 3032985
 
-### Albers Equal Area Projection ###
-proj4string(prec1)
+# Albers equal area projection
+proj4string(LULC)  
 
-###############################
-#### NOT SURE WHAT THIS IS ####
-###############################
-# Covers New England
+# Check geographic region covered
+plot(LULC)  
+# LULC covers the geographic region of New England
 
-# Find Coordinate Reference System (CRS) arguements
-EPSG <- make_EPSG()  # create a data frame with available EPSG codes
-head(EPSG)
+# Put a name to the CRS
+crs_LULC <- proj4string(LULC)  
 
-# search for WGS 84
-# the hard part is knowing what you're looking for!
-# see the resources section for a list of commonly used U.S. CRS
-EPSG[grepl("NAD83", EPSG$note) == TRUE, ]  
-
-## then use the results to assign the CRS as done above
-
+# Check that name is assigned to CRS
+crs_LULC  
 
 
 ###############################################################################################################
@@ -69,7 +62,7 @@ EPSG[grepl("NAD83", EPSG$note) == TRUE, ]
 library(rgdal)
 
 # Read in buckthorn_pts shapefile
-Buck = readOGR(dsn = "assignment", layer="buckthorn_pts")
+Buck = readOGR(dsn = getwd(), layer="buckthorn_pts")
 
 # Look at CRS
 Buck@proj4string
@@ -80,6 +73,9 @@ Buck@bbox
 # X extent = -735848.2 to 2180214
 # Y extent = 1603059.2 to 3005056
 
+# Check geographic region covered
+plot(Buck)
+# Buck appears to cover the geographic region of the US
 
 
 ###############################################################################################################
@@ -89,7 +85,10 @@ Buck@bbox
 # Clip the Buck by the LULC
 NE.Buck <- crop(Buck, LULC)
 
-# Look at structure or nrows of the new data frame
+# Check new clipped data
+plot(NE.Buck)
+
+# Look at structure and nrows of the new data frame
 str(NE.Buck@data)
 nrow(NE.Buck@data)
 # 4010 rows?
@@ -103,9 +102,9 @@ nrow(NE.Buck@data)
 plot(LULC)
 plot(NE.Buck, pch = 19, add = T)
 
-
 ### OR ###
-# Prettier version?
+
+# Prettier version
 plot_pts = list("sp.points", as(NE.Buck, "SpatialPoints"), col = "black", pch = 19)
 spplot(LULC, sp.layout=list(plot_pts))
 
