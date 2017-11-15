@@ -18,7 +18,8 @@
 
 
 #Set working directory:
-setwd("C:/Users/Connor/Documents/word_files/graduate_courses/r/module_12/assignment")
+# setwd("C:/Users/Connor/Documents/word_files/graduate_courses/r/module_12/assignment")
+setwd("C:\\Users\\Drew\\Documents\\UNH\\Courses\\NR 995 - R\\Modules\\12")
 
 
 ###############################################################################################################
@@ -29,19 +30,8 @@ setwd("C:/Users/Connor/Documents/word_files/graduate_courses/r/module_12/assignm
 library(raster)
 
 # Read in data using the raster function
-LULC <- raster("lulc_05.tif")
-
-# Examine CRS
-LULC@crs
-# Datum = NAD83
-# Units = meters
-# Latitude range = 29.5 to 45.5 ?
-# Longitude = ?
-# X extent = 1739505 to 2286435
-# Y extent = 2193885 to 3032985
-
-# Albers equal area projection
-proj4string(LULC)  
+# LULC <- raster("lulc_05.tif")
+LULC <- raster("./assignment/lulc_05.tif")
 
 # Check geographic region covered
 plot(LULC)  
@@ -50,8 +40,16 @@ plot(LULC)
 # Put a name to the CRS
 crs_LULC <- proj4string(LULC)  
 
-# Check that name is assigned to CRS
+# Check that name is assigned to CRS and examine output
 crs_LULC  
+# Datum = NAD83
+# Units = meters
+# Projection = Albert Equal Area Projection (found in r-bloggers link)
+
+# Examine map extent 
+extent(LULC)
+# X extent = 1739505 to 2286435
+# Y extent = 2193885 to 3032985
 
 
 ###############################################################################################################
@@ -62,7 +60,8 @@ crs_LULC
 library(rgdal)
 
 # Read in buckthorn_pts shapefile
-Buck = readOGR(dsn = getwd(), layer="buckthorn_pts")
+# Buck = readOGR(dsn = getwd(), layer="buckthorn_pts")
+Buck = readOGR(dsn = "assignment", layer="buckthorn_pts")
 
 # Look at CRS
 Buck@proj4string
@@ -137,6 +136,7 @@ mode.fxn <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
+
 
 # Apply mode.fxn to extracted LULC data points
 mode.fxn(pts.LULC$extract.LULC..NE.Buck.)
